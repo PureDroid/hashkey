@@ -176,7 +176,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📧 Contact
 
-Project Link: [https://github.com/yourusername/hashkey](https://github.com/PureDroid/hashkey)
+Project Link: [https://github.com/PureDroid/hashkey](https://github.com/PureDroid/hashkey)
 
 ---
 
