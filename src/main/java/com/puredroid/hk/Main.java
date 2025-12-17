@@ -2,7 +2,7 @@ package com.puredroid.hk;
 
 import com.puredroid.hk.database.DatabaseManager;
 
-public class App {
+public class Main {
     public static void main(String[] args) {
         try {
             // Get database manager instance

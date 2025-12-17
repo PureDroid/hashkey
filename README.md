@@ -24,16 +24,19 @@ A robust, fully offline password manager built in Java with SQLite, designed for
 - **SQLite Database** - Lightweight, embedded, zero-configuration
 - **Maven Build System** - Easy dependency management
 - **Modular Architecture** - Clean separation of concerns (Model, Database, Service, Security)
+- **Cross-Platform Ready** - Works on Windows, Mac, Linux (Android support planned)
 
 ## 🏗️ Architecture
 
 ```
 com.puredroid.hk/
-├── model/          # Data models (Organization, Account, AuditLog)
+├── model/          # Data models (Organization, Account, AuditLog, MasterPassword)
 ├── database/       # Database connection and DAO layer
-├── security/       # Encryption, master password, password generator
-├── service/        # Business logic layer
-├── util/           # Helper utilities
+│   ├── DatabaseManager.java    # Singleton connection manager
+│   └── *DAO.java               # Data Access Objects (In Progress)
+├── security/       # Encryption, master password, password generator (Planned)
+├── service/        # Business logic layer (Planned)
+├── util/           # Helper utilities (Planned)
 └── Main.java       # Application entry point
 ```
 
@@ -41,10 +44,18 @@ com.puredroid.hk/
 
 ### Tables
 - **organizations** - Group your accounts by organization
+  - Fields: id, name, description, created_at, updated_at
 - **accounts** - Store encrypted account credentials
+  - Fields: id, org_id, username, email, phone, password_encrypted, notes, url, created_at, updated_at, last_password_change
 - **audit_log** - Track all changes for security
+  - Fields: id, account_id, org_id, action_type, old_values, new_values, timestamp
 - **master_password** - Secure access control
-- **settings** - Application configuration
+  - Fields: id, password_hash, salt, failed_attempts, locked_until, created_at
+- **settings** - Application configuration (key-value pairs)
+
+### Indexes
+- `idx_accounts_org_id` - Fast lookup of accounts by organization
+- `idx_audit_account_id` - Fast lookup of audit logs by account
 
 ## 🚀 Getting Started
 
@@ -56,7 +67,7 @@ com.puredroid.hk/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/PureDroid/hashkey.git
+git clone https://github.com/yourusername/hashkey.git
 cd hashkey
 ```
 
@@ -70,17 +81,19 @@ mvn clean install
 mvn exec:java -Dexec.mainClass="com.puredroid.hk.Main"
 ```
 
+Or run directly from your IDE (VSCode, IntelliJ, Eclipse)
+
 ### First Time Setup
-On first launch, you'll be prompted to:
-1. Create a master password (choose wisely - this cannot be recovered!)
-2. Create your first organization
-3. Start adding accounts
+On first launch, the application will:
+1. Create `passwords.db` in your project directory
+2. Initialize all database tables automatically
+3. Prompt you to create a master password (coming soon!)
 
 ## 🔧 Configuration
 
-Database location: `~/.hashkey/passwords.db`
+**Database location:** `passwords.db` (in project root directory)
 
-Settings can be configured in the application:
+Settings will be configurable in the application:
 - Clipboard timeout duration
 - Auto-lock timer
 - Password generator defaults
@@ -119,12 +132,12 @@ Settings can be configured in the application:
 
 ## 🔐 Security Features Explained
 
-### Encryption
+### Encryption (Planned)
 - All passwords encrypted with AES-256-GCM
 - Unique salt per password
 - Master password hashed with Argon2id
 
-### Master Password
+### Master Password (Planned)
 - Never stored in plain text
 - Salted and hashed using Argon2id
 - Failed attempt tracking with automatic lockout
@@ -134,18 +147,57 @@ Settings can be configured in the application:
 - Old values preserved for rollback capability
 - Timestamps for all changes
 
-## 🎯 Roadmap
+## 🎯 Development Roadmap
 
-- [x] Core database schema
-- [x] Model classes
-- [ ] Database layer implementation
-- [ ] Encryption module
-- [ ] Master password authentication
-- [ ] Password generator
+### ✅ Completed
+- [x] Project structure and Maven setup
+- [x] Complete database schema design
+- [x] Model classes (Organization, Account, AuditLog, MasterPassword)
+- [x] DatabaseManager with Singleton pattern
+- [x] Database initialization and testing
+
+### 🚧 In Progress
+- [ ] DAO layer (OrganizationDAO, AccountDAO, AuditLogDAO, MasterPasswordDAO)
+
+### 📋 Planned
+- [ ] Encryption module (AES-256 for passwords)
+- [ ] Master password authentication (Argon2id hashing)
+- [ ] Password generator utility
+- [ ] Password strength indicator
+- [ ] Service layer (business logic)
+- [ ] Search and filter functionality
 - [ ] CLI interface
 - [ ] GUI (JavaFX/Swing)
-- [ ] Import/Export functionality
-- [ ] Backup/Restore features
+- [ ] Import/Export functionality (encrypted backup)
+- [ ] Clipboard auto-clear feature
+- [ ] Database encryption (SQLCipher)
+
+## 📁 Project Structure
+
+```
+hashkey/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/puredroid/hk/
+│   │   │       ├── model/
+│   │   │       │   ├── Organization.java       ✅
+│   │   │       │   ├── Account.java            ✅
+│   │   │       │   ├── AuditLog.java           ✅
+│   │   │       │   └── MasterPassword.java     ✅
+│   │   │       ├── database/
+│   │   │       │   └── DatabaseManager.java    ✅
+│   │   │       ├── security/                   ⏳
+│   │   │       ├── service/                    ⏳
+│   │   │       ├── util/                       ⏳
+│   │   │       └── Main.java                   ✅
+│   │   └── resources/
+│   │       └── schema.sql                      ✅
+│   └── test/
+├── pom.xml                                     ✅
+├── README.md                                   ✅
+└── passwords.db                                ✅ (auto-generated)
+```
 
 ## 🤝 Contributing
 
@@ -160,10 +212,28 @@ This is a learning project, but contributions are welcome!
 ## ⚠️ Security Notice
 
 **IMPORTANT:** 
-- This is an educational project
+- This is an educational project currently under development
+- Core security features (encryption, master password) are not yet implemented
 - Always backup your database file
-- If you forget your master password, your data is UNRECOVERABLE
+- Once master password is implemented: if you forget it, your data is UNRECOVERABLE
 - For production use, consider audited, battle-tested solutions like Bitwarden or KeePass
+
+## 🧪 Testing
+
+To test the current implementation:
+
+```bash
+# Compile and run
+mvn clean compile
+mvn exec:java
+
+# You should see:
+# Database initialized successfully.
+# ✅ Database setup complete!
+# Database connection closed.
+```
+
+Check that `passwords.db` file is created in your project root!
 
 ## 📝 License
 
@@ -173,6 +243,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - Built as a learning project to understand encryption, database design, and secure software development
 - Inspired by KeePass, Bitwarden, and other open-source password managers
+- Special focus on clean architecture and best practices
 
 ## 📧 Contact
 
@@ -181,3 +252,5 @@ Project Link: [https://github.com/PureDroid/hashkey](https://github.com/PureDroi
 ---
 
 **⚡ HashKey - Your passwords, your machine, your control.**
+
+*Currently in active development - Star ⭐ to follow progress!*
