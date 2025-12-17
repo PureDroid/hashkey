@@ -1,13 +1,24 @@
 package com.puredroid.hk;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import com.puredroid.hk.database.DatabaseManager;
+
+public class App {
+    public static void main(String[] args) {
+        try {
+            // Get database manager instance
+            DatabaseManager dbManager = DatabaseManager.getInstance();
+            
+            // Initialize database (create tables)
+            dbManager.initializeDatabase();
+            
+            System.out.println("✅ Database setup complete!");
+            
+            // Close connection
+            dbManager.close();
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
