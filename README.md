@@ -77,7 +77,7 @@ Failed Attempts → Lockout → Persists to security.meta
 ```
 hashkey/
 │
-├── 📁 src/main/java/com/puredroid/hk/
+├── 📁 src/main/java/com/hashkey/hk/
 │   │
 │   ├── 📦 model/                    # Domain objects
 │   │   ├── Organization.java       ✓ Done
@@ -129,7 +129,7 @@ mvn clean compile
 **Initialize**
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.puredroid.hk.Main"
+mvn exec:java -Dexec.mainClass="com.hashkey.hk.Main"
 ```
 
 **Expected Output**
