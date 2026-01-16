@@ -1,5 +1,9 @@
 # 🔐 HashKey
 
+<p align="center">
+  <img src="assets/social-preview.png" alt="hashkey – Secure Password Manager for Java" />
+</p>
+
 > **Secure Offline Password Vault Core**
 
 **If the system can recover your secrets, so can an attacker.**
