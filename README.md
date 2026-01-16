@@ -29,6 +29,13 @@ so that **other applications** (CLI, desktop app, mobile bridge, etc.) can safel
 
 ---
 
+## 📘 Documentation
+
+- **Usage & Integration:** [`docs/USING_HASHKEY.md`](docs/USING_HASHKEY.md)  
+  Complete guide for embedding HashKey as a module, including API usage, lifecycle rules, and security constraints.
+
+---
+
 ## 🛡️ The HashKey Promise
 
 | NO CLOUD | NO SYNC | NO RECOVERY |
